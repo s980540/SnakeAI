@@ -27,10 +27,10 @@ score_font = pygame.font.SysFont("comicsansms", 35)
 
 # Directions dictionary
 directions = {
-    'left': [-snake_block, 0],
-    'right': [snake_block, 0],
-    'up': [0, -snake_block],
-    'down': [0, snake_block]
+    0: [-snake_block, 0],  # left
+    1: [snake_block, 0],   # right
+    2: [0, -snake_block],  # up
+    3: [0, snake_block]    # down
 }
 
 # List to store data
@@ -68,6 +68,8 @@ def gameLoop():
     foodx = round(random.randrange(0, dis_width - snake_block) / 20.0) * 20.0
     foody = round(random.randrange(0, dis_height - snake_block) / 20.0) * 20.0
 
+    direction = 1  # start moving right
+
     while not game_over:
 
         while game_close == True:
@@ -87,23 +89,22 @@ def gameLoop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    x1_change = -snake_block
-                    y1_change = 0
-                    record_data([x1, y1], foodx, foody, 0)  # 0 represents left
-                elif event.key == pygame.K_RIGHT:
-                    x1_change = snake_block
-                    y1_change = 0
-                    record_data([x1, y1], foodx, foody, 1)  # 1 represents right
-                elif event.key == pygame.K_UP:
-                    y1_change = -snake_block
-                    x1_change = 0
-                    record_data([x1, y1], foodx, foody, 2)  # 2 represents up
-                elif event.key == pygame.K_DOWN:
-                    y1_change = snake_block
-                    x1_change = 0
-                    record_data([x1, y1], foodx, foody, 3)  # 3 represents down
+
+        # Change direction based on the current direction
+        if direction == 0:  # left
+            x1_change = -snake_block
+            y1_change = 0
+        elif direction == 1:  # right
+            x1_change = snake_block
+            y1_change = 0
+        elif direction == 2:  # up
+            y1_change = -snake_block
+            x1_change = 0
+        elif direction == 3:  # down
+            y1_change = snake_block
+            x1_change = 0
+
+        record_data([x1, y1], foodx, foody, direction)
 
         if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
             game_close = True
@@ -131,6 +132,9 @@ def gameLoop():
             foodx = round(random.randrange(0, dis_width - snake_block) / 20.0) * 20.0
             foody = round(random.randrange(0, dis_height - snake_block) / 20.0) * 20.0
             Length_of_snake += 1
+
+            # Change direction randomly
+            direction = random.choice([0, 1, 2, 3])
 
         clock.tick(snake_speed)
 
