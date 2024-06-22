@@ -15,7 +15,7 @@ dis_width = 400
 dis_height = 400
 
 dis = pygame.display.set_mode((dis_width, dis_height))
-pygame.display.set_caption('Snake Game')
+pygame.display.set_caption('Snake Game with AI')
 
 clock = pygame.time.Clock()
 snake_block = 20
@@ -35,6 +35,21 @@ def your_score(score):
 def message(msg, color):
     mesg = font_style.render(msg, True, color)
     dis.blit(mesg, [dis_width / 6, dis_height / 3])
+
+def ai_move(snake_Head, foodx, foody, x1_change, y1_change):
+    if snake_Head[0] < foodx:
+        x1_change = snake_block
+        y1_change = 0
+    elif snake_Head[0] > foodx:
+        x1_change = -snake_block
+        y1_change = 0
+    elif snake_Head[1] < foody:
+        y1_change = snake_block
+        x1_change = 0
+    elif snake_Head[1] > foody:
+        y1_change = -snake_block
+        x1_change = 0
+    return x1_change, y1_change
 
 def gameLoop():
     game_over = False
@@ -71,19 +86,8 @@ def gameLoop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    x1_change = -snake_block
-                    y1_change = 0
-                elif event.key == pygame.K_RIGHT:
-                    x1_change = snake_block
-                    y1_change = 0
-                elif event.key == pygame.K_UP:
-                    y1_change = -snake_block
-                    x1_change = 0
-                elif event.key == pygame.K_DOWN:
-                    y1_change = snake_block
-                    x1_change = 0
+
+        x1_change, y1_change = ai_move([x1, y1], foodx, foody, x1_change, y1_change)
 
         if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
             game_close = True
