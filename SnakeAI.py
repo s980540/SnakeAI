@@ -74,6 +74,7 @@ def gameLoop():
             message("You Lost! Press Q-Quit or C-Play Again", red)
             your_score(Length_of_snake - 1)
             pygame.display.update()
+            print(f"Score: {Length_of_snake - 1}")
 
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
